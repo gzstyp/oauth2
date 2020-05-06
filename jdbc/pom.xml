@@ -14,11 +14,13 @@
 
     <description>
 
-        本项目是基于内存的资源认证服务器
+        本项目是基于jdbc数据库来认证的资源认证服务器，JDBC存储令牌，Client客户端信息也存储在jdbc数据库，token也存入到数据库,但认证用户名和密码没有使用数据库
 
         其实就是做了两个事情，1是认证2是发放code授权码,
 
         响应返回给回调注册redirectUris地址的code授权码再请求认证服务器的接口/oauth/token拿到token令牌
+
+
 
     </description>
 
