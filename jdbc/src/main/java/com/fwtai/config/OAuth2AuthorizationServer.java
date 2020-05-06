@@ -1,11 +1,20 @@
 package com.fwtai.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
+import javax.sql.DataSource;
 
 /**
  * 认证服务器,表示资源所有者,所以要对客户端授权,先走类 WebSecurityConfig 通过用户名和密码登录成功后再到这里认证
@@ -47,21 +56,40 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableAuthorizationServer//该注解表示是认证服务器
 public class OAuth2AuthorizationServer extends AuthorizationServerConfigurerAdapter{
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    // 步骤1，连接数据源
+    @Primary //该注解表示覆盖spring默认的数据库方式
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource dataSource(){
+        return DataSourceBuilder.create().build();
+    }
 
-    //配置客户端的信息,实际项目中下面的信息是存在数据库里或配置文件里
+    //步骤2，告诉认证服务器token要从数据库拿取
+    @Bean
+    public TokenStore tokenStore(){
+        return new JdbcTokenStore(dataSource());
+    }
+
+    //步骤3，因为我们用的是jdbc，所以要配置客户端信息,即 ClientDetailsServiceConfigurer
+    @Bean
+    public ClientDetailsService jdbcClientDetails(){
+        return new JdbcClientDetailsService(dataSource());
+    }
+
+    //步骤4，配置客户端的信息,实际项目中下面的信息是存在数据库里或配置文件里
     // 客户端请求认证服务器，所以要配置客户端信息,即我要知道你是谁!
-    // 模拟操作 http://127.0.0.1:8080/oauth/authorize?client_id=client&response_type=code
+
+    // 模拟操作 http://127.0.0.1:8080/oauth/authorize?client_id=client&response_type=code 认证成功后会跳转到 http://www.yinlz.com 且拿到code=Xxxxx,最终的url是 http://www.yinlz.com?code=zpl21T
+    // 验证可以看本项目的截图 'QQ的授权码模式03-通过code获取token的示例.png'
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception{
-        clients.inMemory()
-            //可以看截图，注意的是 client 和 123456 和 code=响应返回的字符串,授权码只能使用一次
-            .withClient("client").secret(passwordEncoder.encode("123456"))
-            //.authorizedGrantTypes("password","authorization_code","refresh_token","client_credentials","implicit")
-            .authorizedGrantTypes("authorization_code")//使用的是授权码模式,它跟QQ的登录是一样的，先是弹出QQ登录然后，QQ登录成功后有复选框提示可以访问你的QQ头像或昵称之类的复选框
-            .scopes("all")
-            // 响应返回给回调注册redirectUris地址的code授权码再请求认证服务器的接口/oauth/token拿到token令牌
-            .redirectUris("http://www.yinlz.com");
+        //步骤4，还要告诉 ClientDetailsServiceConfigurer 要走的jdbc处理,即
+        clients.withClientDetails(jdbcClientDetails());
+    }
+
+    //步骤5,端点配置,配置获取访问token?
+    @Override
+    public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception{
+        endpoints.tokenStore(tokenStore());
     }
 }

@@ -52,7 +52,7 @@ public class OAuth2AuthorizationServer extends AuthorizationServerConfigurerAdap
 
     //配置客户端的信息,实际项目中下面的信息是存在数据库里或配置文件里
     // 客户端请求认证服务器，所以要配置客户端信息,即我要知道你是谁!
-    // 模拟操作 http://127.0.0.1:8080/oauth/authorize?client_id=client&response_type=code
+    // 模拟操作 http://127.0.0.1:8080/oauth/authorize?client_id=client&response_type=code 认证成功后会跳转到 http://www.yinlz.com 且拿到code=Xxxxx,最终的url是 http://www.yinlz.com?code=zpl21T
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception{
         clients.inMemory()
@@ -61,7 +61,7 @@ public class OAuth2AuthorizationServer extends AuthorizationServerConfigurerAdap
             //.authorizedGrantTypes("password","authorization_code","refresh_token","client_credentials","implicit")
             .authorizedGrantTypes("authorization_code")//使用的是授权码模式,它跟QQ的登录是一样的，先是弹出QQ登录然后，QQ登录成功后有复选框提示可以访问你的QQ头像或昵称之类的复选框
             .scopes("all")
-            // 响应返回给回调注册redirectUris地址的code授权码再请求认证服务器的接口/oauth/token拿到token令牌
+            // 响应返回给回调注册redirectUris地址的code授权码再请求认证服务器的接口/oauth/token拿到token令牌 验证可以看本项目的截图 'QQ的授权码模式03-通过code获取token的示例.png'
             .redirectUris("http://www.yinlz.com");
     }
 }
