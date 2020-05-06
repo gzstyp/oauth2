@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 06/05/2020 18:29:07
+ Date: 06/05/2020 18:38:07
 */
 
 SET NAMES utf8mb4;
@@ -82,6 +82,11 @@ CREATE TABLE `oauth_client_details`  (
   `autoapprove` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of oauth_client_details
+-- ----------------------------
+INSERT INTO `oauth_client_details` VALUES ('client', NULL, '$2a$10$7w8oizC/5i.xU6vr.MCDPeebCi1fjDG2QzUrGQT9nOzv8hnNc172K', 'all', 'authorization_code', 'http://www.fwt.cloud', NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for oauth_client_token
