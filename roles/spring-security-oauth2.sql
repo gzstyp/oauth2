@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 06/05/2020 18:38:07
+ Date: 06/05/2020 19:1:50
 */
 
 SET NAMES utf8mb4;
@@ -129,12 +129,22 @@ CREATE TABLE `tb_permission`  (
   `parent_id` bigint(0) UNSIGNED NULL DEFAULT NULL COMMENT '父权限',
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '权限名称',
   `enname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '权限英文名称',
-  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '授权路径',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '授权路径',
   `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `created` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
   `updated` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '权限表(系统菜单)' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_permission
+-- ----------------------------
+INSERT INTO `tb_permission` VALUES (1, 0, '系统管理员', 'System', '/', NULL, '2020-05-06 19:27:53', '2020-05-06 19:27:53');
+INSERT INTO `tb_permission` VALUES (2, 1, '用户管理', 'SystemUser', '/user/', NULL, '2020-05-06 19:28:40', '2020-05-06 19:28:40');
+INSERT INTO `tb_permission` VALUES (3, 2, '查看用户', 'SystemUserView', '/user/list', NULL, '2020-05-06 19:30:20', '2020-05-06 19:30:20');
+INSERT INTO `tb_permission` VALUES (4, 2, '新增用户', 'SystemUserInsert', '/user/add', NULL, '2020-05-06 19:31:21', '2020-05-06 19:31:21');
+INSERT INTO `tb_permission` VALUES (5, 2, '编辑用户', 'SystemUserUpdate', '/user/edit', NULL, '2020-05-06 19:31:47', '2020-05-06 19:31:47');
+INSERT INTO `tb_permission` VALUES (6, 2, '删除用户', 'SystemUserDelete', '/user/del', NULL, '2020-05-06 19:32:18', '2020-05-06 19:32:18');
 
 -- ----------------------------
 -- Table structure for tb_role
@@ -142,14 +152,19 @@ CREATE TABLE `tb_permission`  (
 DROP TABLE IF EXISTS `tb_role`;
 CREATE TABLE `tb_role`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT,
-  `parent_id` bigint(0) NULL DEFAULT NULL COMMENT '父角色',
+  `parent_id` bigint(0) UNSIGNED NULL DEFAULT 0 COMMENT '父角色',
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色名称',
   `enname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色英文名称',
   `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `created` datetime(0) NOT NULL,
-  `updated` datetime(0) NOT NULL,
+  `created` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+  `updated` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_role
+-- ----------------------------
+INSERT INTO `tb_role` VALUES (1, 0, '超级管理员', 'ADMIN', '超级管理员', '2020-05-06 19:26:02', '2020-05-06 19:26:02');
 
 -- ----------------------------
 -- Table structure for tb_role_permission
@@ -160,7 +175,17 @@ CREATE TABLE `tb_role_permission`  (
   `role_id` bigint(0) UNSIGNED NOT NULL COMMENT '角色 ID',
   `permission_id` bigint(0) UNSIGNED NOT NULL COMMENT '权限 ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色权限表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_role_permission
+-- ----------------------------
+INSERT INTO `tb_role_permission` VALUES (1, 1, 1);
+INSERT INTO `tb_role_permission` VALUES (2, 1, 2);
+INSERT INTO `tb_role_permission` VALUES (3, 1, 3);
+INSERT INTO `tb_role_permission` VALUES (4, 1, 4);
+INSERT INTO `tb_role_permission` VALUES (5, 1, 5);
+INSERT INTO `tb_role_permission` VALUES (6, 1, 6);
 
 -- ----------------------------
 -- Table structure for tb_user
@@ -178,7 +203,12 @@ CREATE TABLE `tb_user`  (
   UNIQUE INDEX `username`(`username`) USING BTREE,
   UNIQUE INDEX `phone`(`phone`) USING BTREE,
   UNIQUE INDEX `email`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_user
+-- ----------------------------
+INSERT INTO `tb_user` VALUES (1, 'admin', '$2a$10$7w8oizC/5i.xU6vr.MCDPeebCi1fjDG2QzUrGQT9nOzv8hnNc172K', '1165121695', '444141300@qq.com', '2020-05-06 19:22:21', '2020-05-06 19:22:21');
 
 -- ----------------------------
 -- Table structure for tb_user_role
@@ -189,6 +219,11 @@ CREATE TABLE `tb_user_role`  (
   `user_id` bigint(0) UNSIGNED NOT NULL COMMENT '用户 ID',
   `role_id` bigint(0) UNSIGNED NOT NULL COMMENT '角色 ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户角色表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户角色表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_user_role
+-- ----------------------------
+INSERT INTO `tb_user_role` VALUES (1, 1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
