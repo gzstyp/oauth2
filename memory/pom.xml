@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>com.fwtai</groupId>
-    <artifactId>memorys</artifactId>
+    <artifactId>memory</artifactId>
     <version>v1.0.0</version>
 
     <description>
