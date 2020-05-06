@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * (登录认证)先在这里认证登录成功之后再去这个类 OAuth2AuthorizationServer 再一次认证,认证成功后跳转到授页面(此时需要点按钮授权)
+ * (自定义登录认证)先在这里认证登录成功之后再去这个类 OAuth2AuthorizationServer 再一次认证,认证成功后跳转到授页面(此时需要点按钮授权)
  * @作者 田应平
  * @版本 v1.0
  * @创建时间 2020-05-06 15:21
