@@ -11,6 +11,7 @@
     <modules>
         <module>memory</module>
         <module>jdbc</module>
+        <module>roles</module>
     </modules>
     <name>oauth2</name>
   <url>http://www.yinlz.com</url>
